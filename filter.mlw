@@ -1,0 +1,59 @@
+module Filter
+	use list.List
+	use list.Length
+	use list.Mem
+	use list.Append
+	use list.Quant
+
+	use option.Option
+
+	type t
+	val function (~=) (x y : t) : bool
+
+	let rec function remainder (x:t) (l:list t) : option (list t)
+	variant {length l}
+	=
+		match l with
+		| Nil -> None
+		| Cons y tl -> if x ~= y then Some l else remainder x tl
+		end
+
+	(**
+		* `sublist` is a sub-list of `l` iff
+		* - its elements belong to `l`
+		* - the order is preserved
+		* - there is no duplication
+		*)
+	let rec remainder_after_first_match (x:t) (l : list t) : option (list t)
+		ensures { result = remainder x l }
+		ensures {
+			match result with
+			| None -> not (mem (~=) x l)
+			| Some out -> exists prefix. (prefix ++ (Cons x Nil)) ++ out = l
+			end
+		}
+	= remainder x l
+
+	predicate sub (l sublist : list t) =
+		match sublist with
+		| Nil -> true
+		| Cons x sublist -> (
+			match remainder x l with
+			| None -> false
+			| Some l -> sub l sublist
+			end
+		)
+	end
+
+	let rec filter (pred:t -> bool) (l: list t) : (filtered : list t)
+		ensures { for_all pred filtered }
+		ensures { sub l filtered }
+		variant { length l }
+	=
+		match l with
+		| Cons head tail ->
+				if pred head then Cons head (filter pred tail)
+				else filter pred tail
+		| Nil -> Nil
+		end
+end
