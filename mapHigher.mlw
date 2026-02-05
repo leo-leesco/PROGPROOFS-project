@@ -1,0 +1,31 @@
+module Map
+	use list.Map
+	use list.Mem
+
+	type t
+	val function t_eq (x y : t) : bool
+
+	let rec function map (f: list t -> list t) (l: list (list t)) : list (list t)
+		ensures { forall y. mem y result -> exists x. mem x l /\ y = f x }
+		variant { l }
+	=
+		match l with
+		| Nil      -> Nil
+		| Cons x r -> Cons (f x) (map f r)
+		end
+
+	clone filter.Filter as TFilter with
+		type t = t,
+		val t_eq = t_eq
+
+	let rec lemma map_filter (pred: t -> bool) (nested : list (list t))
+		ensures {
+			forall x:t.
+		}
+		variant { clauses }
+	=
+		match clauses with
+		| Nil -> ()
+		| Cons c clauses -> map_filter lit clauses
+		end
+end
