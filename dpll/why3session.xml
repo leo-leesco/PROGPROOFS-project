@@ -7,66 +7,409 @@
 <file format="whyml">
 <path name=".."/><path name="dpll.mlw"/>
 <theory name="Top">
- <goal name="clause_eq&#39;vc" expl="VC for clause_eq" proved="true">
- <proof prover="1"><result status="valid" time="0.007569" steps="6497"/></proof>
+ <goal name="subst&#39;vc" expl="VC for subst" proved="true">
+ <proof prover="0"><result status="valid" time="0.018795" steps="243"/></proof>
  </goal>
- <goal name="ClauseFilter.t_eq&#39;refn&#39;vc" expl="VC for t_eq&#39;refn" proved="true">
- <proof prover="1"><result status="valid" time="0.004177" steps="672"/></proof>
+ <goal name="formula_length&#39;vc" expl="VC for formula_length" proved="true">
+ <proof prover="1"><result status="valid" time="0.009276" steps="22519"/></proof>
  </goal>
- <goal name="lit_eq&#39;vc" expl="VC for lit_eq" proved="true">
- <proof prover="1"><result status="valid" time="0.003898" steps="388"/></proof>
- </goal>
- <goal name="LiteralFilter.t_eq&#39;refn&#39;vc" expl="VC for t_eq&#39;refn" proved="true">
- <proof prover="1"><result status="valid" time="0.003553" steps="434"/></proof>
- </goal>
- <goal name="map&#39;vc" expl="VC for map" proved="true">
- <proof prover="1"><result status="valid" time="0.075255" steps="599176"/></proof>
- </goal>
- <goal name="subst&#39;vc" expl="VC for subst">
- <proof prover="0"><result status="timeout" time="1.000000" steps="32016"/></proof>
- <proof prover="1"><result status="timeout" time="1.000000" steps="7263509"/></proof>
+ <goal name="Subst_pos_decrease">
+ <proof prover="0"><result status="timeout" time="1.000000" steps="20315"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000" steps="1725573"/></proof>
  <transf name="split_vc" >
-  <goal name="subst&#39;vc.0" expl="assertion" proved="true">
-  <proof prover="1"><result status="valid" time="0.006909" steps="34877"/></proof>
+  <goal name="Subst_pos_decrease.0">
+  <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="923370"/></proof>
+  <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="2811067"/></proof>
   </goal>
-  <goal name="subst&#39;vc.1" expl="assertion">
-  <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="96043"/></proof>
-  <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="30205948"/></proof>
-  <transf name="inline_goal" >
-   <goal name="subst&#39;vc.1.0" expl="assertion">
-   <transf name="split_all_full" >
-    <goal name="subst&#39;vc.1.0.0" expl="assertion">
-    <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="1191071"/></proof>
-    <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="26.440120" steps="140047507"/></proof>
+ </transf>
+ </goal>
+ <goal name="Subst_neg_decrease">
+ </goal>
+ <goal name="valid&#39;vc" expl="VC for valid" proved="true">
+ <proof prover="1"><result status="valid" time="0.005727" steps="2735"/></proof>
+ </goal>
+ <goal name="clause_eq&#39;vc" expl="VC for clause_eq" proved="true">
+ <proof prover="1"><result status="valid" time="0.014744" steps="45905"/></proof>
+ </goal>
+ <goal name="sat&#39;vc" expl="VC for sat" proved="true">
+ <proof prover="1"><result status="valid" time="0.005139" steps="2727"/></proof>
+ </goal>
+ <goal name="dpll&#39;vc" expl="VC for dpll">
+ <proof prover="0"><result status="timeout" time="1.000000" steps="12201"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000" steps="7488774"/></proof>
+ <transf name="split_vc" >
+  <goal name="dpll&#39;vc.0" expl="variant decrease">
+  <proof prover="0"><result status="valid" time="0.037123" steps="305"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.1" expl="precondition">
+  <proof prover="1"><result status="valid" time="0.002805" steps="4203"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.2" expl="variant decrease">
+  <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="11644"/></proof>
+  <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="3889646"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.2.0" expl="variant decrease">
+   <proof prover="1"><result status="valid" time="0.011976" steps="54482"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.2.1" expl="variant decrease">
+   <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="87310"/></proof>
+   <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="80818453"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="dpll&#39;vc.3" expl="precondition">
+  </goal>
+  <goal name="dpll&#39;vc.4" expl="postcondition">
+  <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="10133"/></proof>
+  <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4824575"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.4.0" expl="postcondition">
+   <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="862802"/></proof>
+   <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="21.060439" steps="75877081"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.4.1" expl="postcondition">
+   <proof prover="1"><result status="valid" time="0.004951" steps="5251"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.4.2" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="11137"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="3923355"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.4.2.0" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="182065"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="23.411387" steps="63421136"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.4.2.1" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="10932"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4883824"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.4.2.1.0" expl="postcondition">
+     <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="1022569"/></proof>
+     <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="24.065451" steps="115504142"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.4.2.1.1" expl="postcondition">
+     <proof prover="1"><result status="valid" time="0.005959" steps="7277"/></proof>
+     </goal>
+    </transf>
     </goal>
    </transf>
    </goal>
   </transf>
   </goal>
-  <goal name="subst&#39;vc.2" expl="assertion" proved="true">
-  <proof prover="0"><result status="valid" time="0.010600" steps="127"/></proof>
+  <goal name="dpll&#39;vc.5" expl="postcondition">
+  <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="10232"/></proof>
+  <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4828895"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.5.0" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="10379"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4457070"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.5.0.0" expl="postcondition">
+    <proof prover="1"><result status="valid" time="0.005211" steps="5778"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.5.0.1" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="11673"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4955571"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.5.0.1.0" expl="postcondition">
+     <proof prover="1"><result status="timeout" time="1.011458" steps="11906902"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.3.0.2.1" expl="postcondition">
+     <proof prover="0"><result status="timeout" time="1.000000" steps="8461"/></proof>
+     <proof prover="1"><result status="timeout" time="1.000000" steps="4922978"/></proof>
+     <transf name="split_vc" >
+      <goal name="dpll&#39;vc.3.0.2.1.0" expl="postcondition">
+      <proof prover="1"><result status="valid" time="0.005539" steps="7243"/></proof>
+      </goal>
+      <goal name="dpll&#39;vc.3.0.2.1.1" expl="postcondition">
+      <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="1265629"/></proof>
+      <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="124705233"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+    <goal name="dpll&#39;vc.5.0.2" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="532809"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="321447509"/></proof>
+    </goal>
+   </transf>
+   </goal>
+   <goal name="dpll&#39;vc.5.1" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="10202"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="5099967"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.5.1.0" expl="postcondition">
+    <proof prover="1"><result status="timeout" time="1.044566" steps="14641644"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.5.1.1" expl="postcondition">
+    <proof prover="1"><result status="valid" time="0.005186" steps="5773"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.5.1.2" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="11600"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="4713677"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.5.1.2.0" expl="postcondition">
+     <proof prover="1"><result status="valid" time="0.012903" steps="61671"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.5.1.2.1" expl="postcondition">
+     <proof prover="1"><result status="valid" time="0.271091" steps="2000959"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
   </goal>
-  <goal name="subst&#39;vc.3" expl="postcondition" proved="true">
-  <proof prover="0"><result status="valid" time="0.008035" steps="21"/></proof>
+ </transf>
+ <transf name="split_vc" >
+  <goal name="dpll&#39;vc.0" expl="variant decrease">
+  <proof prover="0" obsolete="true"><result status="valid" time="0.017876" steps="305"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.1" expl="precondition">
+  <proof prover="1" obsolete="true"><result status="valid" time="0.002944" steps="5038"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.2" expl="precondition">
+  </goal>
+  <goal name="dpll&#39;vc.3" expl="variant decrease">
+  <proof prover="0" obsolete="true"><result status="valid" time="0.446771" steps="12429"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.4" expl="precondition">
+  <proof prover="1" obsolete="true"><result status="valid" time="0.003103" steps="4203"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.5" expl="precondition">
+  </goal>
+  <goal name="dpll&#39;vc.6" expl="postcondition">
+  <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="20053"/></proof>
+  <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7766843"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.6.0" expl="postcondition">
+   <proof prover="1" obsolete="true"><result status="valid" time="0.010141" steps="53759"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.6.1" expl="postcondition">
+   <proof prover="1" obsolete="true"><result status="valid" time="0.002665" steps="5251"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.6.2" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="12792"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7331532"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.6.2.0" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="1063535"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="25.913709" steps="111760630"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.6.2.1" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="16351"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7740303"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.6.2.1.0" expl="postcondition">
+     <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="790458"/></proof>
+     <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="21.172466" steps="126668913"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.6.2.1.1" expl="postcondition">
+     <proof prover="1" obsolete="true"><result status="valid" time="0.003108" steps="7277"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="dpll&#39;vc.7" expl="postcondition">
+  <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="18536"/></proof>
+  <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7742118"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.7.0" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="19348"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7915912"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.7.0.0" expl="postcondition">
+    <proof prover="1" obsolete="true"><result status="valid" time="0.002974" steps="5778"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.0.1" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="485045"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="718350491"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.0.2" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="14858"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7682869"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.7.0.2.0" expl="postcondition">
+     <proof prover="1" obsolete="true"><result status="valid" time="0.003103" steps="7154"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.7.0.2.1" expl="postcondition">
+     <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="18055"/></proof>
+     <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="8103192"/></proof>
+     <transf name="split_vc" >
+      <goal name="dpll&#39;vc.7.0.2.1.0" expl="postcondition">
+      <proof prover="0" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="859762"/></proof>
+      <proof prover="1" timelimit="30" memlimit="4000" obsolete="true"><result status="timeout" time="30.000000" steps="111553943"/></proof>
+      </goal>
+      <goal name="dpll&#39;vc.7.0.2.1.1" expl="postcondition">
+      <proof prover="1" obsolete="true"><result status="valid" time="0.003109" steps="7315"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+   <goal name="dpll&#39;vc.7.1" expl="postcondition">
+   <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="18002"/></proof>
+   <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="7692390"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.7.1.0" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="valid" time="0.010113" steps="61"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.1.1" expl="postcondition">
+    <proof prover="1" obsolete="true"><result status="valid" time="0.003063" steps="5773"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.1.2" expl="postcondition">
+    <proof prover="0" obsolete="true"><result status="timeout" time="1.000000" steps="12363"/></proof>
+    <proof prover="1" obsolete="true"><result status="timeout" time="1.000000" steps="6905617"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.7.1.2.0" expl="postcondition">
+     <proof prover="1" obsolete="true"><result status="valid" time="0.007165" steps="61671"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.7.1.2.1" expl="postcondition">
+     <proof prover="1" obsolete="true"><result status="valid" time="0.296341" steps="2000959"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ <transf name="split_vc" >
+  <goal name="dpll&#39;vc.0" expl="variant decrease" proved="true">
+  <proof prover="0"><result status="valid" time="0.019144" steps="308"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.1" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.002842" steps="4307"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.2" expl="precondition" proved="true">
+  <proof prover="0"><result status="valid" time="0.014462" steps="168"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.3" expl="variant decrease" proved="true">
+  <proof prover="0"><result status="valid" time="0.488878" steps="13216"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.4" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.002727" steps="5059"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.5" expl="precondition" proved="true">
+  <proof prover="0"><result status="valid" time="0.015565" steps="176"/></proof>
+  </goal>
+  <goal name="dpll&#39;vc.6" expl="postcondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="18787"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000" steps="7527486"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.6.0" expl="postcondition" proved="true">
+   <proof prover="1"><result status="valid" time="0.011107" steps="58328"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.6.1" expl="postcondition" proved="true">
+   <proof prover="1"><result status="valid" time="0.002700" steps="5284"/></proof>
+   </goal>
+   <goal name="dpll&#39;vc.6.2" expl="postcondition">
+   <proof prover="0"><result status="timeout" time="1.000000" steps="13833"/></proof>
+   <proof prover="1"><result status="timeout" time="1.000000" steps="6979804"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.6.2.0" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="751749"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="26.656476" steps="63733756"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.6.2.1" expl="postcondition">
+    <proof prover="0"><result status="timeout" time="1.000000" steps="14401"/></proof>
+    <proof prover="1"><result status="timeout" time="1.000000" steps="7705320"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.6.2.1.0" expl="postcondition">
+     <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="430648"/></proof>
+     <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="20.729345" steps="129941503"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.6.2.1.1" expl="postcondition" proved="true">
+     <proof prover="1"><result status="valid" time="0.003013" steps="7310"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="dpll&#39;vc.7" expl="postcondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="18735"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000" steps="7401720"/></proof>
+  <transf name="split_vc" >
+   <goal name="dpll&#39;vc.7.0" expl="postcondition">
+   <proof prover="0"><result status="timeout" time="1.000000" steps="19015"/></proof>
+   <proof prover="1"><result status="timeout" time="1.000000" steps="7586995"/></proof>
+   <transf name="split_vc" >
+    <goal name="dpll&#39;vc.7.0.0" expl="postcondition" proved="true">
+    <proof prover="1"><result status="valid" time="0.002824" steps="5811"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.0.1" expl="postcondition">
+    <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="479595"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="1312894331"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.0.2" expl="postcondition">
+    <proof prover="0"><result status="timeout" time="1.000000" steps="15353"/></proof>
+    <proof prover="1"><result status="timeout" time="1.000000" steps="7525500"/></proof>
+    <transf name="split_vc" >
+     <goal name="dpll&#39;vc.7.0.2.0" expl="postcondition" proved="true">
+     <proof prover="1"><result status="valid" time="0.003136" steps="7187"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.7.0.2.1" expl="postcondition">
+     <proof prover="0"><result status="timeout" time="1.000000" steps="19307"/></proof>
+     <proof prover="1"><result status="timeout" time="1.000000" steps="7988017"/></proof>
+     <transf name="split_vc" >
+      <goal name="dpll&#39;vc.7.0.2.1.0" expl="postcondition" proved="true">
+      <proof prover="1"><result status="valid" time="0.003138" steps="7348"/></proof>
+      </goal>
+      <goal name="dpll&#39;vc.7.0.2.1.1" expl="postcondition">
+      <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="649863"/></proof>
+      <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="127440784"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+   <goal name="dpll&#39;vc.7.1" expl="postcondition" proved="true">
+   <proof prover="0"><result status="timeout" time="1.000000" steps="18868"/></proof>
+   <proof prover="1"><result status="timeout" time="1.000000" steps="7549105"/></proof>
+   <transf name="split_vc" proved="true" >
+    <goal name="dpll&#39;vc.7.1.0" expl="postcondition" proved="true">
+    <proof prover="0"><result status="valid" time="0.009979" steps="61"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.1.1" expl="postcondition" proved="true">
+    <proof prover="1"><result status="valid" time="0.002969" steps="5806"/></proof>
+    </goal>
+    <goal name="dpll&#39;vc.7.1.2" expl="postcondition" proved="true">
+    <proof prover="0"><result status="timeout" time="1.000000" steps="12741"/></proof>
+    <proof prover="1"><result status="timeout" time="1.000000" steps="6910555"/></proof>
+    <transf name="split_vc" proved="true" >
+     <goal name="dpll&#39;vc.7.1.2.0" expl="postcondition" proved="true">
+     <proof prover="1"><result status="valid" time="0.007043" steps="62105"/></proof>
+     </goal>
+     <goal name="dpll&#39;vc.7.1.2.1" expl="postcondition" proved="true">
+     <proof prover="1"><result status="valid" time="0.291125" steps="2001380"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
   </goal>
  </transf>
  </goal>
- <goal name="formula_length&#39;vc" expl="VC for formula_length" proved="true">
- <proof prover="1"><result status="valid" time="0.003595" steps="7835"/></proof>
+</theory>
+</file>
+<file format="whyml" proved="true">
+<path name=".."/><path name="mapHigher.mlw"/>
+<theory name="Map" proved="true">
+ <goal name="map&#39;vc" expl="VC for map" proved="true">
+ <proof prover="1"><result status="valid" time="0.426957" steps="12871260"/></proof>
  </goal>
- <goal name="Subst_decreases_formula_length">
- <proof prover="0"><result status="timeout" time="1.000000" steps="46495"/></proof>
- <proof prover="1"><result status="timeout" time="1.000000" steps="7393143"/></proof>
- </goal>
- <goal name="valid&#39;vc" expl="VC for valid" proved="true">
- <proof prover="1"><result status="valid" time="0.002242" steps="2371"/></proof>
- </goal>
- <goal name="sat&#39;vc" expl="VC for sat" proved="true">
- <proof prover="1"><result status="valid" time="0.002148" steps="2363"/></proof>
- </goal>
- <goal name="dpll&#39;vc" expl="VC for dpll">
- <proof prover="0"><result status="timeout" time="1.000000" steps="10360"/></proof>
- <proof prover="1"><result status="timeout" time="1.000000" steps="8294994"/></proof>
+ <goal name="map_filter&#39;vc" expl="VC for map_filter" proved="true">
+ <proof prover="1"><result status="valid" time="0.007310" steps="20107"/></proof>
  </goal>
 </theory>
 </file>
@@ -74,7 +417,7 @@
 <path name=".."/><path name="filter.mlw"/>
 <theory name="Filter" proved="true">
  <goal name="filter&#39;vc" expl="VC for filter" proved="true">
- <proof prover="1"><result status="valid" time="0.016604" steps="34335"/></proof>
+ <proof prover="1"><result status="valid" time="0.076346" steps="848227"/></proof>
  </goal>
 </theory>
 </file>
