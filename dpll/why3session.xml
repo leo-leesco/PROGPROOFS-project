@@ -2,41 +2,79 @@
 <!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
 "https://www.why3.org/why3session.dtd">
 <why3session shape_version="6">
-<prover id="0" name="Alt-Ergo" version="2.6.2" timelimit="5" steplimit="0" memlimit="1000"/>
-<prover id="1" name="Z3" version="4.13.4" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="0" name="Alt-Ergo" version="2.6.2" timelimit="1" steplimit="0" memlimit="1000"/>
+<prover id="1" name="Z3" version="4.13.4" timelimit="1" steplimit="0" memlimit="1000"/>
 <file format="whyml">
 <path name=".."/><path name="dpll.mlw"/>
 <theory name="Top">
  <goal name="clause_eq&#39;vc" expl="VC for clause_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.011929" steps="92"/></proof>
+ <proof prover="1"><result status="valid" time="0.007569" steps="6497"/></proof>
  </goal>
- <goal name="ClauseFilter.infix ~=&#39;refn&#39;vc" expl="VC for infix ~=&#39;refn" proved="true">
- <proof prover="0"><result status="valid" time="0.015241" steps="2"/></proof>
+ <goal name="ClauseFilter.t_eq&#39;refn&#39;vc" expl="VC for t_eq&#39;refn" proved="true">
+ <proof prover="1"><result status="valid" time="0.004177" steps="672"/></proof>
  </goal>
  <goal name="lit_eq&#39;vc" expl="VC for lit_eq" proved="true">
- <proof prover="0"><result status="valid" time="0.013110" steps="0"/></proof>
+ <proof prover="1"><result status="valid" time="0.003898" steps="388"/></proof>
  </goal>
- <goal name="LiteralFilter.infix ~=&#39;refn&#39;vc" expl="VC for infix ~=&#39;refn" proved="true">
- <proof prover="0"><result status="valid" time="0.011025" steps="0"/></proof>
+ <goal name="LiteralFilter.t_eq&#39;refn&#39;vc" expl="VC for t_eq&#39;refn" proved="true">
+ <proof prover="1"><result status="valid" time="0.003553" steps="434"/></proof>
+ </goal>
+ <goal name="map&#39;vc" expl="VC for map" proved="true">
+ <proof prover="1"><result status="valid" time="0.075255" steps="599176"/></proof>
  </goal>
  <goal name="subst&#39;vc" expl="VC for subst">
- <proof prover="0"><result status="timeout" time="5.000000" steps="118300"/></proof>
- <proof prover="1"><result status="timeout" time="5.000000" steps="32806193"/></proof>
+ <proof prover="0"><result status="timeout" time="1.000000" steps="32016"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000" steps="7263509"/></proof>
+ <transf name="split_vc" >
+  <goal name="subst&#39;vc.0" expl="assertion" proved="true">
+  <proof prover="1"><result status="valid" time="0.006909" steps="34877"/></proof>
+  </goal>
+  <goal name="subst&#39;vc.1" expl="assertion">
+  <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="96043"/></proof>
+  <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="30205948"/></proof>
+  <transf name="inline_goal" >
+   <goal name="subst&#39;vc.1.0" expl="assertion">
+   <transf name="split_all_full" >
+    <goal name="subst&#39;vc.1.0.0" expl="assertion">
+    <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="1191071"/></proof>
+    <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="26.440120" steps="140047507"/></proof>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="subst&#39;vc.2" expl="assertion" proved="true">
+  <proof prover="0"><result status="valid" time="0.010600" steps="127"/></proof>
+  </goal>
+  <goal name="subst&#39;vc.3" expl="postcondition" proved="true">
+  <proof prover="0"><result status="valid" time="0.008035" steps="21"/></proof>
+  </goal>
+ </transf>
  </goal>
  <goal name="formula_length&#39;vc" expl="VC for formula_length" proved="true">
- <proof prover="0"><result status="valid" time="0.009542" steps="18"/></proof>
+ <proof prover="1"><result status="valid" time="0.003595" steps="7835"/></proof>
  </goal>
  <goal name="Subst_decreases_formula_length">
- <proof prover="0"><result status="timeout" time="5.000000" steps="89372"/></proof>
+ <proof prover="0"><result status="timeout" time="1.000000" steps="46495"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000" steps="7393143"/></proof>
  </goal>
  <goal name="valid&#39;vc" expl="VC for valid" proved="true">
- <proof prover="0"><result status="valid" time="0.007605" steps="8"/></proof>
+ <proof prover="1"><result status="valid" time="0.002242" steps="2371"/></proof>
  </goal>
  <goal name="sat&#39;vc" expl="VC for sat" proved="true">
- <proof prover="0"><result status="valid" time="0.006948" steps="2"/></proof>
+ <proof prover="1"><result status="valid" time="0.002148" steps="2363"/></proof>
  </goal>
  <goal name="dpll&#39;vc" expl="VC for dpll">
- <proof prover="0"><result status="timeout" time="5.000000" steps="219869"/></proof>
+ <proof prover="0"><result status="timeout" time="1.000000" steps="10360"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000" steps="8294994"/></proof>
+ </goal>
+</theory>
+</file>
+<file format="whyml" proved="true">
+<path name=".."/><path name="filter.mlw"/>
+<theory name="Filter" proved="true">
+ <goal name="filter&#39;vc" expl="VC for filter" proved="true">
+ <proof prover="1"><result status="valid" time="0.016604" steps="34335"/></proof>
  </goal>
 </theory>
 </file>
