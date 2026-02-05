@@ -1,57 +1,133 @@
 (* Simple DPLL *)
 
 use int.Int
-
 (**
-	* -nvar ... nvar
+	* -nlit ... nlit
 	* +i means x_i
 	* -i means ¬x_i
 	* 0 is not a literal
 	*)
 type literal = int
 
-use list.SortedInt
-use list.Zip
-use list.Quant
-
+use list.List
 (** we limit length clause <= 3 *)
 type clause = list literal
-let rec clause_eq (l m : list literal) : bool
-	requires { sorted l }
-	requires { sorted m }
+
+use list.Length
+use bool.Bool
+
+(* ClauseFilter {{{ *)
+let rec function clause_eq (l m : clause) : bool
 	ensures { result <-> l = m }
+	variant {length l}
 =
 	match l, m with
-	| Cons x l, Cons y m -> x = y /\ clause_eq l m
 	| Nil, Nil -> true
-	| _, _ -> false
+	| Cons x l, Cons y m -> andb (x = y) (clause_eq l m)
+	| _ -> false
 	end
 
-	
-use filter.Filter
-clone filter.Filter as clause_filter with
-	type t = clause
+clone filter.Filter as ClauseFilter with
+	type t = clause,
 	val (~=) = clause_eq
+(* }}} *)
+(* LiteralFilter {{{ *)
+let function lit_eq (x y : int) : bool
+	ensures {result <-> x = y}
+= x = y
 
-type cnf = list clause
-
+clone filter.Filter as LiteralFilter with
+	type t = literal,
+	val (~=) = lit_eq
+(* }}} *)
+(* Map {{{ *)
 use list.Map
 
+let rec function map (f: 'a -> 'b) (l: list 'a) : list 'b =
+	match l with
+	| Nil      -> Nil
+	| Cons x r -> Cons (f x) (map f r)
+	end
+(* }}} *)
+(* Subst {{{ *)
+use list.Quant
 (**
 	* we replace `x` by the truth value `b`
-	* in other words, simplify the entire cnf thanks to the replacement of the literal
+	* in other words, simplify the entire formula thanks to the replacement of the literal
 	*)
-let subst x b clauses =
-	let trivially_verified_clauses_removed = filter (fun c -> not (mem (b, x) c)) clauses in
-  map (filter (fun v -> not (v = (not b, x)))) (* in each clause, if there `x` is found, with the negative positivity (because of the result of filtering, every occurence of `x` in the clause is necessarily of opposite positivity) *)
-
-let rec dpll clauses =
-  match clauses with
-  | Nil -> true
-  | Cons c1 _ -> (
-      match c1 with
-      | Nil -> false
-      | Cons (_, head) _ ->
-          dpll (subst head true clauses)
-          || dpll (subst head false clauses))
+let function subst (x : literal) (clauses : list clause) : list clause
+	ensures { for_all (fun clause -> not (mem (=) x clause) /\ not (mem (=) (-x) clause)) result }
+=
+	let trivial_clauses_removed = ClauseFilter.filter (fun c -> not (mem (=) x c)) clauses in
+  map (LiteralFilter.filter (fun v -> v <> (-x))) trivial_clauses_removed
+(* }}} *)
+(* Variant : Clauses length {{{ *)
+let rec function formula_length (clauses: list clause) : int
+	ensures {result >= 0}
+=
+	match clauses with
+	| Nil -> 0
+	| Cons cls clauses -> length cls + formula_length clauses
 	end
+
+lemma Subst_decreases_formula_length:
+	forall clauses : list clause. forall lit.
+	for_some (fun clause -> mem (=) lit clause) clauses
+		-> formula_length (subst lit clauses) < formula_length clauses
+(* }}} *)
+
+type assignment = list literal
+
+use int.Abs
+use list.Mem
+use bool.Bool
+let rec predicate valid (assign : assignment) (nlit : int) =
+	requires { nlit>=0 }
+	match assign with
+	| Nil -> true
+	| Cons lit tl ->
+		andb (abs lit <= nlit)
+		(andb
+			(not (mem (=) (-lit) tl))
+			(valid tl nlit))
+	end
+
+use list.Mem
+let rec predicate sat (assign : assignment) (clauses : list clause) =
+	match assign with
+	| Nil -> not (mem clause_eq Nil clauses)
+	| Cons lit assign -> sat assign (subst lit clauses)
+	end
+
+use option.Option
+let rec dpll (clauses : list clause) (nlit : int) : option assignment
+	ensures {
+		match result with
+		| None -> true
+		| Some assign -> valid assign nlit
+		end}
+	ensures {
+		match result with
+		| None -> (forall assign. valid assign nlit -> not (sat assign clauses))
+		| Some assign -> sat assign clauses
+		end }
+	variant { formula_length clauses }
+=
+	match clauses with
+	| Nil -> Some Nil
+	| Cons cls _ -> (
+		match cls with
+		| Nil -> None
+		| Cons lit _ -> (
+			match dpll (subst lit clauses) nlit with
+			| Some assign -> Some (Cons lit assign)
+			| None -> (
+				match dpll (subst (-lit) clauses) nlit with
+				| Some assign -> Some (Cons (-lit) assign)
+				| None -> None
+				end)
+			end)
+		end)
+	end
+
+(* vim: set foldmethod=marker : *)
