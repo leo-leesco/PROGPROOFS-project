@@ -3,6 +3,7 @@
 "https://www.why3.org/why3session.dtd">
 <why3session shape_version="6">
 <prover id="0" name="Alt-Ergo" version="2.6.2" timelimit="5" steplimit="0" memlimit="1000"/>
+<prover id="1" name="Z3" version="4.13.4" timelimit="5" steplimit="0" memlimit="1000"/>
 <file format="whyml">
 <path name=".."/><path name="dpll.mlw"/>
 <theory name="Top">
@@ -20,6 +21,7 @@
  </goal>
  <goal name="subst&#39;vc" expl="VC for subst">
  <proof prover="0"><result status="timeout" time="5.000000" steps="118300"/></proof>
+ <proof prover="1"><result status="timeout" time="5.000000" steps="32806193"/></proof>
  </goal>
  <goal name="formula_length&#39;vc" expl="VC for formula_length" proved="true">
  <proof prover="0"><result status="valid" time="0.009542" steps="18"/></proof>
