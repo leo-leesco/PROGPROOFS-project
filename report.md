@@ -4,6 +4,7 @@ title: Boolean Satisfiability and the DPLL Algorithm
 author: Léo \textsc{Leesco}
 date: Jeudi 5 février 2026
 ---
+Si possible, veuillez consulter la [version à jour](https://github.com/leo-leesco/PROGPROOFS-project.git).
 
 # SAT Solver
 
@@ -35,6 +36,14 @@ Dans chaque `clause`, on regarde s'il existe le `literal` qui est de la bonne po
 - soit il est de même positivité et alors la clause est trivialement satisfaite et on peut simplement la supprimer de la liste
 - soit elle est de positivité opposée, et on retire le litéral de la clause (car il contribue, dans cet `assignment`, nécessairement comme `false`)
 
+### Terminaison
+
+Cette fonction termine trivialement (en temps linéaire). La question est de savoir si son utilisation permet de garantir que `dpll` termine : la réponse est oui car elle n'est appelée que sur des `literal`s qui appartiennent effectivement à la formule. De par son fonctionnement, il est alors évident qu'elle fait décroître strictement le nombre de `literal`s présents dans la formule résultante.
+
+Je n'ai pas eu le temps de prouver cette propriété : il faut certainement faire une disjonction de cas en fonction de la positivité du `literal` considéré, et donc casser la logique de la fonction en deux (pour ses deux phases, qui retirent d'une part les clauses contenant le `literal` positif, et d'autre part les occurrences restantes du `literal` négatif).
+
+Ceci est la raison pour laquelle les objectifs de preuve `variant` ne sont pas vérifiés pour la fonction `dpll`.
+
 ## Backtracking : `dpll`
 
 Pour récupérer l'`assignment` correspondant, on retourne récursivement l'`assignment` convenant après substitution, complémentée par la valeur du `literal` qui convient.
@@ -49,3 +58,15 @@ L'`assignment` correspond alors à une `list` contenant les `literal` avec la po
 Pour simplifier les choses, `dpll` renvoie un `option assignment`. Assez naturellement, `None` est renvoyé qui un `assignment` ne peut pas satisfaire la `list clause` passée en argument, et `Some assignment` sinon.
 
 Remarquons que cette méthode ne produit une valeur que pour les `literal` qui figurent réellement dans la `list clause` fournie : on peut donner une valeur arbitraire aux autres (a priori ce n'est pas attendu, et un `assignment` partiel est plus utiile en pratique).
+
+### Preuve de programme
+
+Il faut tout d'abord prouver que l'`assignment` est `valid` : c'est le cas car on n'ajoute que des `literal`s dans l'éventuel assignment qui sont dans la formule, dont on suppose les indices bornés par `nlit`. Je n'ai pas eu le temps de prouver cela, vous pourrez voir que, dans la plupart des cas (`postcondition`), l'`assignment` obtenu est effectivement `valid`.
+
+Ensuite, il faut prouver que l'`assignment` est `sat` vis-à-vis de la formule initiale. Pour cela, on se rend compte que l'`assignment` obtenu est en fait indépendant du `literal` considéré au moment donné et donc qu'on satisfait exactement à chaque étape un `literal` de plus.
+
+Finalement, il faut prouver qu'il n'existe pas d'`assignment` `sat` si on n'a rien retourné : ceci se prouve au moment où retourne `None` (qui n'existe qu'une seule fois dans l'algorithme) puisqu'on a nécessairement une `clause` vide à cet instant. Par définition, une clause vide n'est pas satisfiable, ce qui convient.
+
+# Conclusion
+
+Je n'ai pas eu le temps de faire toutes les preuves, mais je compte finir la preuve complète ce week-end. Si possible, veuillez consulter la [version à jour](https://github.com/leo-leesco/PROGPROOFS-project.git).
