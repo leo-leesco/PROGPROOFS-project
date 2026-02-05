@@ -29,7 +29,7 @@ let rec function clause_eq (l m : clause) : bool
 
 clone filter.Filter as ClauseFilter with
 	type t = clause,
-	val (~=) = clause_eq
+	val t_eq = clause_eq
 (* }}} *)
 (* LiteralFilter {{{ *)
 let function lit_eq (x y : int) : bool
@@ -38,19 +38,9 @@ let function lit_eq (x y : int) : bool
 
 clone filter.Filter as LiteralFilter with
 	type t = literal,
-	val (~=) = lit_eq
+	val t_eq = lit_eq
 (* }}} *)
 (* Map {{{ *)
-use list.Map
-
-let rec function map (f: 'a -> 'b) (l: list 'a) : list 'b
-	ensures { forall y. mem y result -> exists x. mem x l /\ y = f x }
-	variant { l }
-=
-	match l with
-	| Nil      -> Nil
-	| Cons x r -> Cons (f x) (map f r)
-	end
 (* }}} *)
 (* Subst {{{ *)
 use list.Quant
@@ -68,6 +58,7 @@ let function subst (lit : literal) (clauses : list clause) : list clause
 	assert { forall c. mem clause_eq c trivial_clauses_removed -> not (mem (=) lit c) };
   
 	let neg_lit_removed = map (LiteralFilter.filter (fun v -> v <> (-lit))) trivial_clauses_removed in
+	assert { forall c. mem clause_eq c neg_lit_removed -> not (mem (=) lit c) };
 	assert { forall c. mem clause_eq c neg_lit_removed -> forall l. mem (=) l c -> l <> (-lit) };
 
 	neg_lit_removed
