@@ -10,29 +10,24 @@ module Filter
 	type t
 	val function (~=) (x y : t) : bool
 
-	let rec function remainder (x:t) (l:list t) : option (list t)
-	variant {length l}
-	=
-		match l with
-		| Nil -> None
-		| Cons y tl -> if x ~= y then Some l else remainder x tl
-		end
-
 	(**
 		* `sublist` is a sub-list of `l` iff
 		* - its elements belong to `l`
 		* - the order is preserved
 		* - there is no duplication
 		*)
-	let rec remainder_after_first_match (x:t) (l : list t) : option (list t)
-		ensures { result = remainder x l }
+	let rec function remainder (x:t) (l:list t) : option (list t)
 		ensures {
 			match result with
 			| None -> not (mem (~=) x l)
 			| Some out -> exists prefix. (prefix ++ (Cons x Nil)) ++ out = l
 			end
 		}
-	= remainder x l
+	=
+		match l with
+		| Nil -> None
+		| Cons y tl -> if x ~= y then Some l else remainder x tl
+		end
 
 	predicate sub (l sublist : list t) =
 		match sublist with
