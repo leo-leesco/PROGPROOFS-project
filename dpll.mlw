@@ -10,56 +10,32 @@ use int.Int
 type literal = int
 
 use list.List
-(** we limit length clause <= 3 *)
 type clause = list literal
 
 use list.Length
 use bool.Bool
 
-(* ClauseFilter {{{ *)
-let rec function clause_eq (l m : clause) : bool
-	ensures { result <-> l = m }
-	variant {length l}
-=
-	match l, m with
-	| Nil, Nil -> true
-	| Cons x l, Cons y m -> andb (x = y) (clause_eq l m)
-	| _ -> false
-	end
-
-clone filter.Filter as ClauseFilter with
-	type t = clause,
-	val t_eq = clause_eq
-(* }}} *)
-(* LiteralFilter {{{ *)
-let function lit_eq (x y : int) : bool
-	ensures {result <-> x = y}
-= x = y
-
-clone filter.Filter as LiteralFilter with
-	type t = literal,
-	val t_eq = lit_eq
-(* }}} *)
-(* Map {{{ *)
-(* }}} *)
 (* Subst {{{ *)
-use list.Quant
+use list.Mem
+use list.Quant as Q
+use filter.Filter
+use mapHigher.Map
 (**
 	* we replace `x` by the truth value `b`
 	* in other words, simplify the entire formula thanks to the replacement of the literal
 	*)
 let function subst (lit : literal) (clauses : list clause) : list clause
 	ensures {
-		forall cls:clause. mem clause_eq cls result ->
-		(forall l. mem (=) l cls -> l <> lit /\ l <> (-lit))
+		forall cls:clause. mem cls result ->
+		(forall l. mem l cls -> l <> lit /\ l <> (-lit))
 	}
 =
-	let trivial_clauses_removed = ClauseFilter.filter (fun c -> not (mem (=) lit c)) clauses in
-	assert { forall c. mem clause_eq c trivial_clauses_removed -> not (mem (=) lit c) };
+	let trivial_clauses_removed = filter (fun c -> not (Q.mem (=) lit c)) clauses in
+	assert { forall c. mem c trivial_clauses_removed -> not (mem lit c) };
   
-	let neg_lit_removed = map (LiteralFilter.filter (fun v -> v <> (-lit))) trivial_clauses_removed in
-	assert { forall c. mem clause_eq c neg_lit_removed -> not (mem (=) lit c) };
-	assert { forall c. mem clause_eq c neg_lit_removed -> forall l. mem (=) l c -> l <> (-lit) };
+	let neg_lit_removed = map (filter (fun v -> v <> (-lit))) trivial_clauses_removed in
+	assert { forall c. mem c neg_lit_removed -> not (mem lit c) };
+	assert { forall c. mem c neg_lit_removed -> forall l. mem l c -> l <> (-lit) };
 
 	neg_lit_removed
 (* }}} *)
@@ -74,15 +50,13 @@ let rec function formula_length (clauses: list clause) : int
 
 lemma Subst_decreases_formula_length:
 	forall clauses : list clause. forall lit.
-	for_some (fun clause -> mem (=) lit clause) clauses
+	Q.for_some (fun clause -> mem lit clause) clauses
 		-> formula_length (subst lit clauses) < formula_length clauses
 (* }}} *)
 
 type assignment = list literal
 
 use int.Abs
-use list.Mem
-use bool.Bool
 let rec predicate valid (assign : assignment) (nlit : int) =
 	requires { nlit>=0 }
 	match assign with
@@ -90,14 +64,22 @@ let rec predicate valid (assign : assignment) (nlit : int) =
 	| Cons lit tl ->
 		andb (abs lit <= nlit)
 		(andb
-			(not (mem (=) (-lit) tl))
+			(not (Q.mem (=) (-lit) tl))
 			(valid tl nlit))
 	end
 
-use list.Mem
+let rec function clause_eq (c1 c2 : clause) : bool
+	ensures {result <-> c1 = c2}
+=
+	match c1,c2 with
+	| Nil,Nil -> true
+	| Cons x c1, Cons y c2 -> andb (x = y) (clause_eq c1 c2)
+	| _ -> false
+	end
+
 let rec predicate sat (assign : assignment) (clauses : list clause) =
 	match assign with
-	| Nil -> not (mem clause_eq Nil clauses)
+	| Nil -> not (Q.mem clause_eq Nil clauses)
 	| Cons lit assign -> sat assign (subst lit clauses)
 	end
 
