@@ -38,7 +38,6 @@ let function subst (lit : literal) (clauses : list clause) : list clause
 	assert { forall c. mem c neg_lit_removed -> forall l. mem l c -> l <> (-lit) };
 
 	neg_lit_removed
-(* }}} *)
 (* Variant : Clauses length {{{ *)
 let rec function formula_length (clauses: list clause) : int
 	ensures {result >= 0}
@@ -59,9 +58,12 @@ lemma Subst_neg_decrease:
 	forall clauses lit. occurs_in (-lit) clauses ->
 		formula_length (subst lit clauses) < formula_length clauses
 (* }}} *)
+(* }}} *)
 
 type assignment = list literal
 
+(* Sat {{{ *)
+(* Valid assignment {{{ *)
 use int.Abs
 let rec predicate valid (assign : assignment) (nlit : int) =
 	requires { nlit>=0 }
@@ -73,6 +75,7 @@ let rec predicate valid (assign : assignment) (nlit : int) =
 			(not (Q.mem (=) (-lit) tl))
 			(valid tl nlit))
 	end
+(* }}} *)
 
 let rec function clause_eq (c1 c2 : clause) : bool
 	ensures {result <-> c1 = c2}
@@ -88,9 +91,12 @@ let rec predicate sat (assign : assignment) (clauses : list clause) =
 	| Nil -> not (Q.mem clause_eq Nil clauses)
 	| Cons lit assign -> sat assign (subst lit clauses)
 	end
+(* }}} *)
 
 use option.Option
 let rec dpll (clauses : list clause) (nlit : int) : option assignment
+	requires {nlit>=0}
+	requires {forall l:literal. occurs_in l clauses -> abs l <= nlit}
 	ensures {
 		match result with
 		| None -> true
