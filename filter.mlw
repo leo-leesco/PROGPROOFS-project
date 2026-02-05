@@ -29,7 +29,7 @@ module Filter
 		| Cons y tl -> if x ~= y then Some l else remainder x tl
 		end
 
-	predicate sub (l sublist : list t) =
+	let rec predicate sub (l sublist : list t) =
 		match sublist with
 		| Nil -> true
 		| Cons x sublist -> (
