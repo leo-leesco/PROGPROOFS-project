@@ -1,11 +1,10 @@
 module Map
+	use list.List
 	use list.Map
 	use list.Mem
+	use filter.Filter
 
-	type t
-	val function t_eq (x y : t) : bool
-
-	let rec function map (f: list t -> list t) (l: list (list t)) : list (list t)
+	let rec function map (f: list 'a -> list 'a) (l: list (list 'a)) : list (list 'a)
 		ensures { forall y. mem y result -> exists x. mem x l /\ y = f x }
 		variant { l }
 	=
@@ -14,18 +13,16 @@ module Map
 		| Cons x r -> Cons (f x) (map f r)
 		end
 
-	clone filter.Filter as TFilter with
-		type t = t,
-		val t_eq = t_eq
-
-	let rec lemma map_filter (pred: t -> bool) (nested : list (list t))
+	let rec lemma map_filter (pred: 'a -> bool) (nested : list (list 'a))
 		ensures {
-			forall x:t.
+			let res = map (filter pred) nested in
+			forall x. (forall sub. mem sub nested -> not (mem x sub)) -> (* if it is not in the result, *)
+			(forall sub. mem sub res -> not (mem x sub)) (* it is not in the initial list*)
 		}
-		variant { clauses }
+		variant { nested }
 	=
-		match clauses with
+		match nested with
 		| Nil -> ()
-		| Cons c clauses -> map_filter lit clauses
+		| Cons _ tail -> map_filter pred tail (* we only recursively verify the rest since the head is trivially verified *)
 		end
 end

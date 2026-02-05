@@ -1,20 +1,17 @@
 module Filter
 	use list.List
 	use list.Length
-	use list.Quant
+	use list.Mem
 
-	type t
-	val function t_eq (x y : t) : bool
-
-	let rec filter (pred:t -> bool) (l: list t) : (filtered : list t)
-		ensures { for_all pred filtered }
-		ensures { forall x. mem t_eq x filtered -> mem t_eq x l }
+	let rec function filter (pred:'a -> bool) (l: list 'a) : (filtered : list 'a)
+		ensures { forall x. mem x filtered -> pred x }
+		ensures { forall x. mem x filtered -> mem x l }
 		variant { length l }
 	=
 		match l with
 		| Cons head tail ->
 			let filtered = filter pred tail in
-			assert { forall x. mem t_eq x filtered -> mem t_eq x l };
+			assert { forall x. mem x filtered -> mem x l };
 			if pred head then Cons head filtered else filtered
 		| Nil -> Nil
 		end
