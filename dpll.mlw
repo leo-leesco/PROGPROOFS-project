@@ -43,7 +43,10 @@ clone filter.Filter as LiteralFilter with
 (* Map {{{ *)
 use list.Map
 
-let rec function map (f: 'a -> 'b) (l: list 'a) : list 'b =
+let rec function map (f: 'a -> 'b) (l: list 'a) : list 'b
+	ensures { forall y. mem y result -> exists x. mem x l /\ y = f x }
+	variant { l }
+=
 	match l with
 	| Nil      -> Nil
 	| Cons x r -> Cons (f x) (map f r)
@@ -55,11 +58,19 @@ use list.Quant
 	* we replace `x` by the truth value `b`
 	* in other words, simplify the entire formula thanks to the replacement of the literal
 	*)
-let function subst (x : literal) (clauses : list clause) : list clause
-	ensures { for_all (fun clause -> not (mem (=) x clause) /\ not (mem (=) (-x) clause)) result }
+let function subst (lit : literal) (clauses : list clause) : list clause
+	ensures {
+		forall cls:clause. mem clause_eq cls result ->
+		(forall l. mem (=) l cls -> l <> lit /\ l <> (-lit))
+	}
 =
-	let trivial_clauses_removed = ClauseFilter.filter (fun c -> not (mem (=) x c)) clauses in
-  map (LiteralFilter.filter (fun v -> v <> (-x))) trivial_clauses_removed
+	let trivial_clauses_removed = ClauseFilter.filter (fun c -> not (mem (=) lit c)) clauses in
+	assert { forall c. mem clause_eq c trivial_clauses_removed -> not (mem (=) lit c) };
+  
+	let neg_lit_removed = map (LiteralFilter.filter (fun v -> v <> (-lit))) trivial_clauses_removed in
+	assert { forall c. mem clause_eq c neg_lit_removed -> forall l. mem (=) l c -> l <> (-lit) };
+
+	neg_lit_removed
 (* }}} *)
 (* Variant : Clauses length {{{ *)
 let rec function formula_length (clauses: list clause) : int
