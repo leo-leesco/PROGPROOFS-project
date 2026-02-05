@@ -48,10 +48,16 @@ let rec function formula_length (clauses: list clause) : int
 	| Cons cls clauses -> length cls + formula_length clauses
 	end
 
-lemma Subst_decreases_formula_length:
-	forall clauses : list clause. forall lit.
-	Q.for_some (fun clause -> mem lit clause) clauses
-		-> formula_length (subst lit clauses) < formula_length clauses
+predicate occurs_in (lit: literal) (clauses: list clause) =
+	exists c. mem c clauses /\ mem lit c
+
+lemma Subst_pos_decrease:
+	forall clauses lit. occurs_in lit clauses ->
+		formula_length (subst lit clauses) < formula_length clauses
+
+lemma Subst_neg_decrease:
+	forall clauses lit. occurs_in (-lit) clauses ->
+		formula_length (subst lit clauses) < formula_length clauses
 (* }}} *)
 
 type assignment = list literal
