@@ -1,4 +1,3 @@
-
 open Format
 
 let run f =
@@ -30,7 +29,7 @@ let read_cnf (file: string) : dimacs =
 
 open Dpll
 
-let make_3sat dimacs : int * int * cls array =
+let make_3sat dimacs : int * int * cls list =
   let nv = ref dimacs.nb_variables in
   let clause3 acc cl =
     let rec split acc = function
@@ -44,22 +43,19 @@ let make_3sat dimacs : int * int * cls array =
     split acc cl
   in
   let cl = List.fold_left clause3 [] dimacs.clauses in
-  dimacs.nb_variables, !nv, Array.of_list cl
+  dimacs.nb_variables, !nv, cl
 
 let file = Sys.argv.(1)
 let dimacs = read_cnf file
 let ov, nv, cl = make_3sat dimacs
-let () = printf "%d variables, %d clauses@." nv (Array.length cl)
+let () = printf "%d variables, %d clauses@." nv (List.length cl)
 
 let is_sat () =
   let v = Array.make (1 + nv) Z.zero in
-  if sat v cl then (
+  match dpll cl (1+nv) with
+    | None -> printf "UNSAT@."
+    | Some asgnment ->
     printf "SAT@.";
-    for i = 1 to ov do
-      printf "%a " Z.pp_print v.(i)
-    done;
-    printf "0@.";
-  ) else
-    printf "UNSAT@."
+      List.iter ( printf "%a " Z.pp_print ) asgnment
 
 let () = run is_sat
