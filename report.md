@@ -6,6 +6,8 @@ date: Jeudi 5 février 2026
 ---
 Si possible, veuillez consulter la [version à jour](https://github.com/leo-leesco/PROGPROOFS-project.git).
 
+Pour utiliser l'ensemble des fichiers fournis, il est conseillé d'utiliser la commande `why3 ide -L . dpll.mlw`. Il est nécessaire de charger les fichiers supplémentaires `filter.mlw` et `mapHigher.mlw` qui donnent certaines fonctions du programme principal.
+
 # SAT Solver
 
 ## Choix de modélisation
