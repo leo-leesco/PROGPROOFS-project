@@ -47,7 +47,7 @@ module Filter
 
 	let rec filter (pred:t -> bool) (l: list t) : (filtered : list t)
 		ensures { for_all pred filtered }
-		ensures { sub l filtered }
+		ensures { for_all (fun x -> mem (~=) x l) filtered }
 		variant { length l }
 	=
 		match l with
