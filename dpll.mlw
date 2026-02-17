@@ -20,24 +20,7 @@ use list.Mem
 use list.Quant as Q
 use filter.Filter
 use mapHigher.Map
-(**
-	* we replace `x` by the truth value `b`
-	* in other words, simplify the entire formula thanks to the replacement of the literal
-	*)
-let function subst (lit : literal) (clauses : list clause) : list clause
-	ensures {
-		forall cls:clause. mem cls result ->
-		(forall l. mem l cls -> l <> lit /\ l <> (-lit))
-	}
-=
-	let trivial_clauses_removed = filter (fun c -> not (Q.mem (=) lit c)) clauses in
-	assert { forall c. mem c trivial_clauses_removed -> not (mem lit c) };
-  
-	let neg_lit_removed = map (filter (fun v -> v <> (-lit))) trivial_clauses_removed in
-	assert { forall c. mem c neg_lit_removed -> not (mem lit c) };
-	assert { forall c. mem c neg_lit_removed -> forall l. mem l c -> l <> (-lit) };
 
-	neg_lit_removed
 (* Variant : Clauses length {{{ *)
 let rec function formula_length (clauses: list clause) : int
 	ensures {result >= 0}
@@ -50,14 +33,128 @@ let rec function formula_length (clauses: list clause) : int
 predicate occurs_in (lit: literal) (clauses: list clause) =
 	exists c. mem c clauses /\ mem lit c
 
-lemma Subst_pos_decrease:
-	forall clauses lit. occurs_in lit clauses ->
-		formula_length (subst lit clauses) < formula_length clauses
+(* Monotonicity {{{ *)
+let rec lemma filter_decr_formula_length (pred: clause -> bool) (clauses: list clause)
+	ensures {
+		let filtered = filter pred clauses in
+		formula_length filtered <= formula_length clauses
+	}
+	variant {clauses}
+= match clauses with
+  | Nil -> ()
+  | Cons c tl -> filter_decr_formula_length pred tl;
+	assert { length c >= 0 }
+	end
 
-lemma Subst_neg_decrease:
-	forall clauses lit. occurs_in (-lit) clauses ->
-		formula_length (subst lit clauses) < formula_length clauses
+let rec lemma filter_literal_monotonic (p: literal -> bool) (l: list literal)
+    ensures { length (filter p l) <= length l }
+    variant { l }
+= match l with
+  | Nil -> ()
+  | Cons _ tl -> filter_literal_monotonic p tl
+  end
+
+let rec lemma map_monotonic (f: clause -> clause) (clauses: list clause)
+    requires { forall c. length (f c) <= length c }
+    ensures { formula_length (map f clauses) <= formula_length clauses }
+    variant { clauses }
+= match clauses with
+  | Nil -> ()
+  | Cons _ tl -> map_monotonic f tl
+  end
+
+lemma MapFilter_decr_formula_length:
+	forall clauses pred.
+	let filtered = map (filter pred) clauses in
+	formula_length filtered <= formula_length clauses
 (* }}} *)
+
+(* Strict monotonicity {{{ *)
+let rec lemma filter_atomic_strict (lit: literal) (c: clause)
+	requires { mem lit c }
+	ensures { length (filter (fun x -> x <> lit) c) < length c }
+	variant { c }
+= match c with
+	| Nil -> absurd
+	| Cons h t ->
+		if h = lit then ()
+		else filter_atomic_strict lit t
+	end
+
+let rec lemma filter_clause_strict_decr (lit: literal) (clauses: list clause)
+	requires { occurs_in lit clauses }
+	ensures {
+		let res = filter (fun c -> not (mem lit c)) clauses in
+			formula_length res < formula_length clauses
+	}
+	variant { clauses }
+= match clauses with
+  | Nil -> absurd
+  | Cons c tl ->
+      if mem lit c then begin
+           (* We drop 'c'. Since lit is in c, length c >= 1.
+              So total length decreases strictly. *)
+           assert { length c >= 1 };
+           (* Use the standard filter decreases lemma for the tail *)
+           filter_decr_formula_length (fun c -> not (mem lit c)) tl
+      end else begin
+           (* Recurse to find the clause in the tail *)
+           filter_clause_strict_decr lit tl
+      end
+  end
+
+let rec lemma map_strict_decr (lit: literal) (clauses: list clause)
+    requires { occurs_in lit clauses }
+    ensures {
+        let res = map (filter (fun x -> x <> lit)) clauses in
+        formula_length res < formula_length clauses
+    }
+    variant { clauses }
+= match clauses with
+  | Nil -> absurd
+  | Cons c tl ->
+      if mem lit c then begin
+          filter_atomic_strict lit c;
+          map_monotonic (filter (fun x -> x <> lit)) tl
+      end else begin
+          map_strict_decr lit tl
+      end
+  end
+(* }}} *)
+
+(* }}} *)
+(**
+	* we replace `x` by the truth value `b`
+	* in other words, simplify the entire formula thanks to the replacement of the literal
+	*)
+let function subst (lit : literal) (clauses : list clause) : list clause
+	requires { occurs_in lit clauses \/ occurs_in (-lit) clauses }
+	ensures {
+		forall cls:clause. mem cls result ->
+		(forall l. mem l cls -> l <> lit /\ l <> (-lit))
+	}
+	ensures {formula_length result < formula_length clauses}
+=
+	let trivial_clauses_removed = filter (fun c -> not (Q.mem (=) lit c)) clauses in
+	assert { forall c. mem c trivial_clauses_removed -> not (mem lit c) };
+	assert { formula_length trivial_clauses_removed <= formula_length clauses };
+	if occurs_in lit clauses then begin
+		Q.for_some (filter_atomic_strict lit) clauses;
+		MapFilter_decr_formula_length trivial_clauses_removed (fun v -> v <> (-lit));
+	end else begin
+		assert { trivial_clauses_removed = clauses };
+		assert { occurs_in (-lit) trivial_clauses_removed };
+		map_strict_decr (-lit) trivial_clauses_removed;
+	end;
+	(* assert { occurs_in lit clauses -> formula_length trivial_clauses_removed < formula_length clauses }; *)
+  
+	let neg_lit_removed = map (filter (fun v -> v <> (-lit))) trivial_clauses_removed in
+	assert { forall c. mem c neg_lit_removed -> not (mem lit c) };
+	assert { forall c. mem c neg_lit_removed -> forall l. mem l c -> l <> (-lit) };
+	assert { formula_length neg_lit_removed <= formula_length trivial_clauses_removed };
+	(* assert { occurs_in (-lit) trivial_clauses_removed -> formula_length neg_lit_removed < formula_length trivial_clauses_removed }; *)
+
+	neg_lit_removed
 (* }}} *)
 
 type assignment = list literal
